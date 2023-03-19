@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../models/poll.dart';
+import '../../services/api.dart';
 import '../my_scaffold.dart';
 
 class HomePage extends StatefulWidget {
@@ -13,6 +14,8 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   List<Poll>? _polls;
   var _isLoading = false;
+  bool _isError = false;
+  String _errMessage = '';
 
   @override
   void initState() {
@@ -22,7 +25,31 @@ class _HomePageState extends State<HomePage> {
 
   _loadData() async {
     // todo: Load list of polls here
+    setState(() {
+      _isLoading = true;
+    });
+
+    await Future.delayed(const Duration(seconds: 3), () {});
+
+
+    try {
+      var result = await ApiClient().getAllPolls();
+      setState(() {
+        _polls = result;
+      });
+    } catch (e) {
+      setState(() {
+        _errMessage = e.toString();
+        _isError = true;
+      });
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
   }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -44,12 +71,85 @@ class _HomePageState extends State<HomePage> {
   }
 
   ListView _buildList() {
+
     return ListView.builder(
       itemCount: _polls!.length,
       itemBuilder: (BuildContext context, int index) {
         // todo: Create your poll item by replacing this Container()
-        return Container();
-      },
+
+
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('${_polls![index].id} . ${_polls![index].question} \n'),
+            Column(
+              children: [
+               OutlinedButton(
+                  onPressed: () {},
+
+                  child: Text(_polls![index].choices[0]),
+
+                ),
+                OutlinedButton(
+                  onPressed: () {},
+
+                  child: Text(_polls![index].choices[1]),
+
+                ),
+                OutlinedButton(
+                  onPressed: () {},
+
+                  child: Text(_polls![index].choices[2]),
+
+                ),
+                OutlinedButton(
+                  onPressed: () {},
+
+                  child: Text(_polls![index].choices[3]),
+
+                ),
+                OutlinedButton(
+                  onPressed: () {},
+
+                  child: Text(_polls![index].choices[4]),
+
+                ),
+                OutlinedButton(
+                  onPressed: () {},
+
+                  child: Text(_polls![index].choices[5]),
+
+                ),
+                OutlinedButton(
+                  onPressed: () {},
+
+                  child: Text(_polls![index].choices[6]),
+
+                ),
+                OutlinedButton(
+                  onPressed: () {},
+
+                  child: Text(_polls![index].choices[7]),
+
+                ),
+                OutlinedButton(
+                  onPressed: () {},
+
+                  child: Text(_polls![index].choices[8]),
+
+                ),
+                OutlinedButton(
+                  onPressed: () {},
+
+                  child: Text(_polls![index].choices[9]),
+
+                ),
+              ],
+            ),
+          ],
+        );
+        },
+
     );
   }
 
@@ -69,5 +169,6 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
     );
+
   }
 }
